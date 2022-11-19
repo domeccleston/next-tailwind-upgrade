@@ -6,3 +6,9 @@ the steps in [this guide](https://tailwindcss.com/docs/guides/nextjs#app-directo
 This automates that process for you.
 
 Compatible with Next.js 13. Supports NPM, Yarn, and PNPM.
+
+## Usage
+
+`npx next-tailwind-upgrade` from the root of your project
+
+`npx next-tailwind-upgrade ./my-app` to run it on a child Next.js app named my-app
