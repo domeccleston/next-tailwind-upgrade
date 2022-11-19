@@ -1,0 +1,9 @@
+{
+  "name": "nextwind",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Add Tailwind to a Next.js project",
+  "main": "index.js",
+  "author": "Dom Eccleston",
+  "license": "ISC"
+}
