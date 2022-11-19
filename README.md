@@ -5,7 +5,7 @@ the steps in [this guide](https://tailwindcss.com/docs/guides/nextjs#app-directo
 
 This automates that process for you.
 
-Compatible with Next.js 13. Supports NPM, Yarn, and PNPM.
+Compatible with Next.js 12 and 13. Supports NPM, Yarn, and PNPM.
 
 ## Usage
 
