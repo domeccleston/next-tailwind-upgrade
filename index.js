@@ -1,4 +1,4 @@
-import fs from "fs";
+import { readFileSync, readdirSync, writeFileSync } from "fs";
 import { argv } from "node:process";
 import { execSync } from "child_process";
 
@@ -23,7 +23,7 @@ import { execSync } from "child_process";
 
 function readPackageJson(dir) {
   try {
-    const packageJsonContents = fs.readFileSync(
+    const packageJsonContents = readFileSync(
       dir + "/" + "package.json",
       "utf8"
     );
@@ -48,20 +48,70 @@ function detectPackageManager(files) {
 function installDependencies(packageManager) {
   const result = execSync(
     `cd ${dir} && ` +
-    installCommands[packageManager] + " " + tailwindDependencies
+      installCommands[packageManager] +
+      " " +
+      tailwindDependencies
   ).toString();
   return result;
 }
 
 function createTailwindConfig() {
-  execSync(`cd ${dir} && touch tailwind.config.js`);
-  execSync(`cat ${tailwindNextConfig} tailwind.config.js`)
+  if (readdirSync(dir).includes("tailwind.config.js")) {
+    execSync(`cd ${dir} && rm tailwind.config.js`);
+  } else {
+    execSync(`cd ${dir} && touch tailwind.config.js`);
+  }
+  writeFileSync(`${dir}/tailwind.config.js`, tailwindNextConfig);
+  return;
 }
+
+function getNextVersion(packageJson) {
+  if (readdirSync(dir).includes("app")) return "new";
+  else return "old";
+}
+
+function applyTailwindDirectives(nextVersion) {
+  let globalCssFile;
+  if (nextVersion === "old") {
+    globalCssFile = "styles/globals.css";
+  } else if (nextVersion === "new") {
+    globalCssFile = "app/globals.css";
+  }
+  writeFileSync(`${dir}/${globalCssFile}`, tailwindDirectives);
+}
+
+function initTailwind() {
+  execSync(`cd ${dir} && ${execCommands[packageManager]} tailwindcss init -p`);
+}
+
+const tailwindNextConfig = `/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: [
+    "./app/**/*.{js,ts,jsx,tsx}",
+    "./pages/**/*.{js,ts,jsx,tsx}",
+    "./components/**/*.{js,ts,jsx,tsx}",
+  ],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+}`;
+
+const tailwindDirectives = `@tailwind base;
+@tailwind components;
+@tailwind utilities;
+`;
 
 const installCommands = {
   yarn: "yarn add -D",
   pnpm: "pnpm install -D",
   npm: "npm install -D",
+};
+
+const execCommands = {
+  yarn: "npx",
+  npm: "npx",
+  pnpm: "pnpm exec",
 };
 
 const tailwindDependencies = "tailwindcss postcss autoprefixer";
@@ -72,12 +122,19 @@ if (argv[2]) {
 } else {
   dir = ".";
 }
-const files = fs.readdirSync(dir);
+const files = readdirSync(dir);
 const packageManager = detectPackageManager(files);
 if (!files.includes("next.config.js")) {
   throw new Error("Script can only be run in root of a Next.js project.");
 }
 const packageJsonContents = readPackageJson(dir);
+const nextVersion = getNextVersion(packageJsonContents);
 const output = installDependencies(packageManager);
-createTailwindConfig();
 console.log(output);
+initTailwind();
+createTailwindConfig();
+applyTailwindDirectives(nextVersion);
+console.log(
+  "Added Tailwind. If you removed the import of your global stylesheet, you may need to add it in again."
+);
+process.exit();

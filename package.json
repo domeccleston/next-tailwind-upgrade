@@ -1,5 +1,5 @@
 {
-  "name": "nextwind",
+  "name": "next-tailwind-upgrade",
   "type": "module",
   "version": "1.0.0",
   "description": "Add Tailwind to a Next.js project",
