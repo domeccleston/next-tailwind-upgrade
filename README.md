@@ -9,6 +9,7 @@ Compatible with Next.js 12 and 13. Supports NPM, Yarn, and PNPM.
 
 ## Usage
 
-`npx next-tailwind-upgrade` from the root of your project
+`npm install next-tailwind-upgrade`
+`node ./node_modules/next-tailwind-upgrade/index.js`
 
-`npx next-tailwind-upgrade ./my-app` to run it on a child Next.js app named my-app
+This doesn't work with `npx` currently. I don't know why
