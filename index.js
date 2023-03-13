@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import { readFileSync, readdirSync, writeFileSync } from "fs";
 import { argv } from "node:process";
 import { execSync } from "child_process";
