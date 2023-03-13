@@ -1,7 +1,7 @@
 {
   "name": "next-tailwind-upgrade",
   "type": "module",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Add Tailwind to a Next.js project",
   "repository": {
     "type": "git",
@@ -9,5 +9,8 @@
   },
   "main": "index.js",
   "author": "Dom Eccleston",
-  "license": "ISC"
+  "license": "ISC",
+  "bin": {
+    "next-tailwind-upgrade": "index.js"
+  }
 }
